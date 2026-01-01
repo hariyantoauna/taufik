@@ -1,0 +1,140 @@
+@extends('learning.index')
+
+@section('course')
+<section>
+
+    {{-- <div class="card">
+
+        <div class="card-body">
+            <div>
+                <form action="{{ route('post.store') }}" method="POST">
+                    @csrf
+                    <div class="mb-3">
+                        <label for="post" class="form-label">Postingan</label>
+                        <textarea class="form-control" name="post" id="post" rows="3" required></textarea>
+                    </div>
+
+                    <input type="hidden" value="{{ $course->id }}" name="course_id">
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <button type="submit" class="btn btn-primary" type="submit">Post</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div> --}}
+
+
+
+    <div>
+        <h3 class="my-4">🕒 Timeline</h3>
+
+        @foreach ($timelines as $item)
+        <div class="card mb-4 shadow-sm border-0">
+            <div class="card-body">
+                {{-- Header: Avatar & Nama --}}
+                <div class="d-flex align-items-center mb-3">
+                    <img src="{{ $item['photo']
+                                ? asset('storage/' . $item['photo'])
+                                : 'https://ui-avatars.com/api/?name=' .
+                                    urlencode($item['name']) .
+                                    '&background=random&color=fff&rounded=true&size=160' }}" alt="Foto Pengguna"
+                        class="rounded-circle shadow-sm me-3" style="object-fit: cover; height: 50px; width: 50px;">
+
+                    <div>
+                        <h6 class="mb-0 fw-bold">{{ $item['name'] ?? 'User Tidak Dikenal' }}</h6>
+                        {{ $item['created_at']->diffForHumans() }}
+                    </div>
+                </div>
+
+
+                {{-- Konten Timeline --}}
+                <div class="mb-2">
+                    @if ($item['type'] === 'post')
+                    <div class="mb-2">
+                        {!! $item['post'] !!}
+                    </div>
+                    @elseif ($item['type'] === 'canva')
+                    {!! $item['post'] !!}
+                    <div class="ratio ratio-16x9 mb-3">
+                        <iframe src="{{ str_replace('/watch', '/view?embed', $item['canva_url']) }}"
+                            style="border: none;" allowfullscreen>
+                        </iframe>
+                    </div>
+                    @elseif ($item['type'] === 'video')
+                    {!! $item['post'] !!}
+                    <div class="ratio ratio-16x9 mb-3">
+                        <iframe src="{{ $item['video_url'] }}" style="border: none;" allowfullscreen>
+                        </iframe>
+                    </div>
+                    @elseif ($item['type'] === 'pdf')
+                    {! $item['post'] !}
+                    <div class="ratio ratio-16x9 mb-3">
+                        <iframe src="{{ $item['pdf_url'] }}" style="border: none;" allowfullscreen>
+                        </iframe>
+                    </div>
+                    @elseif ($item['type'] === 'url')
+                    {{ $item['post'] }}
+
+                    <a class="btn btn-success" href="{{ $item['url_url'] }}">Lihat URL</a>
+                    @endif
+
+                </div>
+                {{-- komen --}}
+                <div class="comment">
+                    <div class="mb-3">
+                        <form action="{{ route('comment.store') }}" method="post">
+                            @csrf
+                            <label for="message" class="form-label">Komentar</label>
+                            <textarea class="form-control" name="message" id="message" rows="3"></textarea>
+                            <input type="hidden" name="code" value="{{ $item['code'] }}">
+                            <input type="hidden" name="course_id" value="{{ $course->id }}">
+
+                            <div class="my-3 d-grid gap-2 d-md-flex justify-content-md-end">
+
+                                <button class="btn btn-primary" type="submit">Kirim</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    @foreach ($comments as $comment)
+                    @if ($comment->code === $item['code'])
+                    <div class="card border-0 shadow-sm mb-3 mx-2" style="border-radius: 1rem;">
+                        <div class="card-body">
+                            <div class="d-flex align-items-start">
+                                {{-- Foto Profil --}}
+                                <img src="{{ $comment->user->photo
+                                                    ? asset('storage/' . $comment->user->photo)
+                                                    : 'https://ui-avatars.com/api/?name=' . urlencode($comment->user->name) }}"
+                                    alt="Foto" class="rounded-circle me-3" width="48" height="48"
+                                    style="object-fit: cover;">
+
+                                <div class="w-100">
+                                    {{-- Nama dan Tanggal --}}
+                                    <div class="d-flex justify-content-between">
+                                        <div>
+                                            <h6 class="mb-0 fw-semibold">{{ $comment->user->name }}</h6>
+                                            <small class="text-muted">{{ $comment->created_at->format('d M Y, H:i')
+                                                }}</small>
+                                        </div>
+                                        {{-- Optional tombol aksi seperti edit/hapus bisa ditaruh di sini --}}
+                                    </div>
+
+                                    {{-- Isi Komentar --}}
+                                    <p class="mt-2 mb-0 text-dark" style="font-size: 0.95rem;">
+                                        {{ $comment->message }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @endif
+                    @endforeach
+
+                </div>
+            </div>
+        </div>
+        @endforeach
+    </div>
+</section>
+@endsection

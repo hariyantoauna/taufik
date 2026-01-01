@@ -1,0 +1,54 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::table('canvas', function (Blueprint $table) {
+            $table->boolean('active')->default(1)->after('id');
+        });
+
+        Schema::table('urls', function (Blueprint $table) {
+            $table->boolean('active')->default(1)->after('id');
+        });
+
+        Schema::table('videos', function (Blueprint $table) {
+            $table->boolean('active')->default(1)->after('id');
+        });
+
+        Schema::table('pdfs', function (Blueprint $table) {
+            $table->boolean('active')->default(1)->after('id');
+        });
+
+        Schema::table('posts', function (Blueprint $table) {
+            $table->boolean('active')->default(1)->after('id');
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::table('canvas', function (Blueprint $table) {
+            $table->dropColumn('active');
+        });
+
+        Schema::table('urls', function (Blueprint $table) {
+            $table->dropColumn('active');
+        });
+
+        Schema::table('videos', function (Blueprint $table) {
+            $table->dropColumn('active');
+        });
+
+        Schema::table('pdfs', function (Blueprint $table) {
+            $table->dropColumn('active');
+        });
+
+        Schema::table('posts', function (Blueprint $table) {
+            $table->dropColumn('active');
+        });
+    }
+};
