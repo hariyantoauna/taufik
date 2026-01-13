@@ -39,9 +39,8 @@
                             ? asset('storage/' . $item->user->photo)
                             : 'https://ui-avatars.com/api/?name=' .
                                 urlencode($item->user->name) .
-                                '&background=random&color=fff&rounded=true&size=160' }}"
-                    alt="Foto Pengguna" class="rounded-circle shadow-sm me-3"
-                    style="object-fit: cover; height: 50px; width: 50px;">
+                                '&background=random&color=fff&rounded=true&size=160' }}" alt="Foto Pengguna"
+                    class="rounded-circle shadow-sm me-3" style="object-fit: cover; height: 50px; width: 50px;">
                 <div>
                     <h6 class="mb-0 fw-semibold">{{ $item->user->name ?? 'Pengguna' }}</h6>
                     <small class="text-muted">{{ $item['created_at']->diffForHumans() }}</small>
@@ -70,10 +69,28 @@
 
             {{-- Desain video atau url --}}
 
-            <div>
+            {{-- <div>
                 {!! QrCode::size(200)->generate($item->url_url) !!}
+            </div> --}}
+
+            @php
+            $qrCode = base64_encode(QrCode::format('png')->size(200)->generate($item->url_url));
+            @endphp
+
+
+            <div>
+                <img id="qrcode-img" src="data:image/png;base64,{{ $qrCode }}" alt="QR Code">
             </div>
+
+
+
             <br>
+
+            <a id="download-btn" href="data:image/png;base64,{{ $qrCode }}" download="qrcode.png"
+                class="btn btn-primary">
+                Download QR Code
+            </a>
+
 
 
 
@@ -116,8 +133,8 @@
                                 <div class="d-flex justify-content-between">
                                     <div>
                                         <h6 class="mb-0 fw-semibold">{{ $comment->user->name }}</h6>
-                                        <small
-                                            class="text-muted">{{ $comment->created_at->format('d M Y, H:i') }}</small>
+                                        <small class="text-muted">{{ $comment->created_at->format('d M Y, H:i')
+                                            }}</small>
                                     </div>
                                     {{-- Optional tombol aksi seperti edit/hapus bisa ditaruh di sini --}}
                                 </div>

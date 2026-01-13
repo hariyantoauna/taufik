@@ -20,7 +20,7 @@ class UrlLearningController extends Controller
 
 
 
-        $timelines = Url::where(['course_id'=> $course->id, 'active'=> 1])->latest()->get();
+        $timelines = Url::where(['course_id' => $course->id, 'active' => 1])->latest()->get();
         // dd($timeline);
 
         $data = [
